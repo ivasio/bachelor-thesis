@@ -1,5 +1,6 @@
 package com.ivasio.bachelor_thesis.shared;
 
+
 public class Junction {
 
     private final long id;
