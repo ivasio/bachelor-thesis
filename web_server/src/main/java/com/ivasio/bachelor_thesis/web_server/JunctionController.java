@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +32,16 @@ public class JunctionController {
     }
 
     @GetMapping("/")
+    @ApiOperation(value = "Получить список всех известных дорожных развязок", response = Junction.class)
     public List<Junction> listAllJunctions() {
         return new ArrayList<Junction>(allJunctions.values());
     }
 
     @GetMapping("/{id}")
-    public Junction getJunctionById(@PathVariable("id") int id) {
+    @ApiOperation(value = "Получить информацию о дорожной развязке по ее id", response = Junction.class)
+    public Junction getJunctionById(
+            @ApiParam(value = "id дорожной развязки", required = true, example = "1") @PathVariable("id") int id
+    ) {
         Junction result =  allJunctions.get(id);
         if (result != null) {
             return result;
