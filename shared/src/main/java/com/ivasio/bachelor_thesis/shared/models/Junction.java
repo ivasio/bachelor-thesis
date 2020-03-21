@@ -1,23 +1,33 @@
-package com.ivasio.bachelor_thesis.shared;
+package com.ivasio.bachelor_thesis.shared.models;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+
+@Entity
 @ApiModel(description = "Дорожная развязка")
 public class Junction {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(notes = "Уникальный id дорожной развязки")
-    private final long id;
+    private long id;
 
     @ApiModelProperty(notes = "Название дорожной развязки")
-    private final String name;
+    private String name;
 
     @ApiModelProperty(notes = "Координаты дорожной развязки : долгота")
-    private final float longitude;
+    private float longitude;
 
     @ApiModelProperty(notes = "Координаты дорожной развязки : широта")
-    private final float latitude;
+    private float latitude;
+
+    protected Junction() {}
 
     public Junction(long id, String name, float longitude, float latitude) {
         this.id = id;
