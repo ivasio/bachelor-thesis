@@ -13,6 +13,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <start-class>com.ivasio.bachelor_thesis.web_server.RestServiceApplication</start-class>
     </properties>
 
     <dependencies>
@@ -37,6 +38,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.2.5.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
