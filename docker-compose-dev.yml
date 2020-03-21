@@ -10,8 +10,23 @@ services:
       dockerfile: web_server/Dockerfile
       context: .
     restart: always
+    depends_on:
+      - postgres
     ports:
       - "8888:8080"
+
+  # PostgreSQL database
+  postgres:
+    image: ivasio/postgres
+    build:
+      dockerfile: Dockerfile-postgres
+      context: shared
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: thesis
+    ports:
+     - "5431:5432"
 
   # Kafka and Zookeeper
 #  zookeeper:

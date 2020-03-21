@@ -24,15 +24,6 @@ public class JunctionController {
     @Autowired
     private JunctionService service;
 
-    /*
-    public JunctionController() {
-        allJunctions = new ConcurrentHashMap<Integer, Junction>();
-        allJunctions.put(1, new Junction(1, "МКАД - ш. Энтузиастов", 37.84270f, 55.77692f));
-        allJunctions.put(2, new Junction(2, "МКАД - Каширское ш.", 37.72944f, 55.59180f));
-        allJunctions.put(3, new Junction(3, "МКАД - Рязанский пр.", 37.83499f, 55.70789f));
-    }
-    */
-
     @GetMapping("/")
     @ApiOperation(value = "Получить список всех известных дорожных развязок", response = Junction.class)
     public List<Junction> listAllJunctions() {
