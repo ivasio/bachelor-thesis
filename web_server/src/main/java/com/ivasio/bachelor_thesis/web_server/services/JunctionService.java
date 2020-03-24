@@ -19,15 +19,14 @@ public class JunctionService {
     private JunctionRepository repo;
 
     public List<Junction> listAll() {
-        return repo.findAll();
-    }
-
-    public void save(Junction product) {
-        repo.save(product);
+        List<Junction> result = repo.findAll();
+        return result;
     }
 
     public Optional<Junction> get(Long id) {
         return repo.findById(id);
     }
+
+
 
 }
