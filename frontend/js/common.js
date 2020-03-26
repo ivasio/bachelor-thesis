@@ -32,7 +32,7 @@ const apiUrl = 'http://localhost:8888/junctions/'
 //Json -> Obj
 async function getJunctions () {
 	const apiResponse = await fetch(apiUrl)
-	const allJunctions = await apiResponse.json()
+	const apiJunctions = await apiResponse.json()
 
 	//Перебираем объект, инициализируем новый объект класса Junction
 	for (let key in apiJunctions) {
