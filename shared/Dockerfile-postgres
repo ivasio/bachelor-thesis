@@ -2,4 +2,4 @@
 FROM postgres
 
 # These scripts get run before database startup
-COPY sql/* /docker-entrypoint-initdb.d/
+COPY sql/setup.sql /docker-entrypoint-initdb.d/
