@@ -5,14 +5,14 @@ CREATE TABLE junction (
     latitude float8 NOT NULL
 );
 
-
 CREATE TABLE route (
     id serial8 NOT NULL PRIMARY KEY,
     junction_id integer NOT NULL REFERENCES junction(id)
 );
 
-
 INSERT INTO junction (name, longitude, latitude) VALUES
     ('МКАД - ш. Энтузиастов', 37.84270, 55.77692),
     ('МКАД - Каширское ш.', 37.72944, 55.59180),
     ('МКАД - Рязанский пр.', 37.83499, 55.70789);
+
+INSERT INTO route (junction_id) VALUES (1), (1), (2), (3), (3), (3), (3);

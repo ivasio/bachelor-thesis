@@ -1,7 +1,6 @@
 package com.ivasio.bachelor_thesis.web_server.controllers;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,17 +41,17 @@ public class JunctionController {
         );
     }
 
-    @GetMapping("/routes_count/{id}")
+    @GetMapping("/{id}/routes_count")
     @ApiOperation(value = "Получить количество траекторий, соответствующих дорожной развязке, " +
-            "по ее id", response = Junction.class)
-    public int getRoutesCountForId(
+            "по ее id", response = Long.class)
+    public Long getRoutesCountForId(
             @ApiParam(value = "id дорожной развязки", required = true, example = "1") @PathVariable("id") Long id
     ) {
         Junction junction = service.get(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Junction with id %d not found", id))
         );
-        return junction.getRoutes().size();
+        return (long)junction.getRoutes().size();
     }
 
 }
