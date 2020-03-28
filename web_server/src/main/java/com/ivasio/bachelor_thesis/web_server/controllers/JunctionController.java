@@ -41,4 +41,17 @@ public class JunctionController {
         );
     }
 
+    @GetMapping("/{id}/routes_count")
+    @ApiOperation(value = "Получить количество траекторий, соответствующих дорожной развязке, " +
+            "по ее id", response = Long.class)
+    public Long getRoutesCountForId(
+            @ApiParam(value = "id дорожной развязки", required = true, example = "1") @PathVariable("id") Long id
+    ) {
+        Junction junction = service.get(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Junction with id %d not found", id))
+        );
+        return (long)junction.getRoutes().size();
+    }
+
 }

@@ -3,10 +3,8 @@ package com.ivasio.bachelor_thesis.shared.models;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 
 @Entity
@@ -26,6 +24,9 @@ public class Junction {
 
     @ApiModelProperty(notes = "Координаты дорожной развязки : широта")
     private float latitude;
+
+    @OneToMany(mappedBy="junction", fetch=FetchType.LAZY)
+    private Set<Route> routes;
 
     protected Junction() {}
 
@@ -51,5 +52,9 @@ public class Junction {
 
     public float getLatitude() {
         return latitude;
+    }
+
+    public Set<Route> getRoutes() {
+        return routes;
     }
 }
