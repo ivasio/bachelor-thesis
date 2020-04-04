@@ -11,8 +11,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="shared" target="1.5" />
-      <module name="thesis" target="1.5" />
+      <module name="shared" target="8" />
+      <module name="thesis" target="8" />
       <module name="web_server" target="8" />
     </bytecodeTargetLevel>
   </component>
