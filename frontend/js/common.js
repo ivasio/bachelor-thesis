@@ -28,7 +28,7 @@ let map = new L.Map('map', {
 })
 
 // Слой с маркер-элементами 
-var markersLayer = new L.LayerGroup() 	 
+let markersLayer = new L.LayerGroup() 	 
   map.addLayer(markersLayer) 
 	
   // Инициализация списка макеров

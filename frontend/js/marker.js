@@ -23,7 +23,7 @@
     // Метод добавления на карту контейнера со списком, добавление и обновление по событию moveend, возвращаем контейнер
     onAdd: function (map) {
       this._map = map
-      var container = this._container = L.DomUtil.create('div', 'list-markers') 
+      let container = this._container = L.DomUtil.create('div', 'list-markers') 
       this._list = L.DomUtil.create('ul', 'list-markers-ul', container) 
       map.on('moveend', this._updateList, this)
       this._updateList()
@@ -39,7 +39,7 @@
     // Создание элементов ul li контейнера, работа с маркерами
     _createItem: function(layer) {
   
-      var li = L.DomUtil.create('li', 'list-markers-li'),
+      let li = L.DomUtil.create('li', 'list-markers-li'),
         a = L.DomUtil.create('a', '', li),
         icon = this.options.itemIcon ? '<img src="'+this.options.itemIcon+'" />' : '',
         that = this
@@ -72,7 +72,7 @@
     // Метод обновления контейнера по существующим маркерам в видимой области 
     _updateList: function() {
     
-      var that = this,
+      let that = this,
         n = 0
 
       this._list.innerHTML = ''
