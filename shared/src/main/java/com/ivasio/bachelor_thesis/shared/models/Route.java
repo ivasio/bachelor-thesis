@@ -3,12 +3,8 @@ package com.ivasio.bachelor_thesis.shared.models;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -24,4 +20,25 @@ public class Route {
     @JoinColumn(name="junction_id", nullable=false)
     private Junction junction;
 
+    @OneToMany(mappedBy="route", fetch=FetchType.LAZY)
+    private List<Point> points;
+
+    protected Route() {}
+
+    public Route(long id, Junction junction) {
+        this.id = id;
+        this.junction = junction;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Junction getJunction() {
+        return junction;
+    }
+
+    public List<Point> getPoints() {
+        return points;
+    }
 }

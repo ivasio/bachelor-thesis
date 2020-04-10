@@ -37,7 +37,6 @@ public class Junction {
         this.latitude = latitude;
     }
 
-
     public long getId() {
         return id;
     }

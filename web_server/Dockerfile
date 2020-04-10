@@ -5,9 +5,9 @@ WORKDIR /build
 
 # Install the dependencies
 # All the poms must be listed here
-COPY ./pom.xml ./
-COPY ./web_server/pom.xml ./web_server/
-COPY ./shared/pom.xml ./shared/
+COPY ./pom.xml ./pom.xml
+COPY ./web_server/pom.xml ./web_server/pom.xml
+COPY ./shared/pom.xml ./shared/pom.xml
 RUN mvn dependency:go-offline
 
 COPY . .
