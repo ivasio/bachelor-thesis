@@ -1,13 +1,15 @@
 package com.ivasio.bachelor_thesis.shared.models;
 
+import java.util.Set;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
-import java.util.Set;
-
 
 @Entity
+@JsonIgnoreProperties("routes")
 @ApiModel(description = "Дорожная развязка")
 public class Junction {
 
@@ -25,16 +27,21 @@ public class Junction {
     @ApiModelProperty(notes = "Координаты дорожной развязки : широта")
     private float latitude;
 
+    @ApiModelProperty(notes = "Условный радиус дорожной развязки (м)")
+    private float radius;
+
+
     @OneToMany(mappedBy="junction", fetch=FetchType.LAZY)
     private Set<Route> routes;
 
     protected Junction() {}
 
-    public Junction(long id, String name, float longitude, float latitude) {
+    public Junction(long id, String name, float longitude, float latitude, float radius) {
         this.id = id;
         this.name = name;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.radius = radius;
     }
 
     public long getId() {
@@ -51,6 +58,10 @@ public class Junction {
 
     public float getLatitude() {
         return latitude;
+    }
+
+    public float getRadius() {
+        return radius;
     }
 
     public Set<Route> getRoutes() {
