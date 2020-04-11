@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/event_processor/event_processor.iml" filepath="$PROJECT_DIR$/event_processor/event_processor.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared/shared.iml" filepath="$PROJECT_DIR$/shared/shared.iml" />
       <module fileurl="file://$PROJECT_DIR$/thesis.iml" filepath="$PROJECT_DIR$/thesis.iml" />
       <module fileurl="file://$PROJECT_DIR$/web_server/web_server.iml" filepath="$PROJECT_DIR$/web_server/web_server.iml" />

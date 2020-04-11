@@ -7,8 +7,9 @@
     <groupId>com.ivasio.bachelor-thesis</groupId>
     <artifactId>thesis</artifactId>
     <packaging>pom</packaging>
-    <version>0.1</version>
+    <version>0.2</version>
     <modules>
+        <module>event_processor</module>
         <module>web_server</module>
         <module>shared</module>
     </modules>

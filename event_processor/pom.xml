@@ -9,7 +9,6 @@
         <groupId>com.ivasio.bachelor-thesis</groupId>
         <version>0.2</version>
     </parent>
-    <artifactId>shared</artifactId>
-
+    <artifactId>event_processor</artifactId>
 
 </project>
