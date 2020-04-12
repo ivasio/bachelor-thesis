@@ -7,12 +7,16 @@
     <groupId>com.ivasio.bachelor-thesis</groupId>
     <artifactId>thesis</artifactId>
     <packaging>pom</packaging>
-    <version>0.2</version>
+    <version>${project.version}</version>
     <modules>
         <module>event_processor</module>
         <module>web_server</module>
         <module>shared</module>
     </modules>
+
+    <properties>
+        <project.version>2.0</project.version>
+    </properties>
 
     <dependencies>
         <dependency>
