@@ -40,11 +40,12 @@ let list = new L.Control.ListMarkers({layer: markersLayer})
 map.addControl(list)
 
 class Junction {
-  constructor (id = Number, name = String, latitude = Number, longitude = Number) {
+  constructor (id = Number, name = String, latitude = Number, longitude = Number, radius = Number) {
     this.id = id,
     this.name = name,
     this.latitude = latitude,
-    this.longitude = longitude
+    this.longitude = longitude,
+    this.radius = radius
   }
   // Метод получения количества траекторий развязки
   getRoutesInfo = async () => {
@@ -64,11 +65,11 @@ class Junction {
   }
   // Метод добавления маркера на слой markersLayer с цветом iconColor
   addMarker(iconColor) {
-    let marker = L.marker([this.longitude, this.latitude], {junction: this.name}).setIcon(iconColor).addTo(markersLayer).bindPopup(this.name)
+    let marker = L.marker([this.longitude, this.latitude], {junction: this.name, radius: this.radius}).setIcon(iconColor).addTo(markersLayer).bindPopup(this.name)
     let activeCircle = false
     marker.on('click', function(e) {
       if (activeCircle) {map.removeLayer(activeCircle)}
-      activeCircle = L.circle(e.target.getLatLng(), {radius: 350 , color: "#ff0000"}).addTo(map)
+      activeCircle = L.circle(e.target.getLatLng(), {radius: this.options.radius , color: "#ff0000"}).addTo(map)
     })
     marker.on('popupclose', function(e) {map.removeLayer(activeCircle)})
     return marker
@@ -138,7 +139,7 @@ async function getJunctions () {
 
   // Создаем обьект
   for (let key in junctionsObj) {
-    let junction = new Junction(junctionsObj[key].id, junctionsObj[key].name, junctionsObj[key].longitude, junctionsObj[key].latitude)
+    let junction = new Junction(junctionsObj[key].id, junctionsObj[key].name, junctionsObj[key].longitude, junctionsObj[key].latitude, junctionsObj[key].radius)
     // Обработка методов
     junction.getRoutesInfo().then((routesObj) => {
       routesRatio = junction.getRoutesRatio(routesObj, routesMax)
