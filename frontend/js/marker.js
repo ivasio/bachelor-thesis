@@ -1,104 +1,91 @@
-  // Создание класса Control.ListMarkers
-  L.Control.ListMarkers = L.Control.extend({
-    // Свойство класса, которое объединяет все указанные объекты в класс
-    includes: L.version[0]==='1' ? L.Evented.prototype : L.Mixin.Events,
-    // Свойство, которое будет объединено с родительским
-    options: {		
-      layer: false,
-      maxItems: 10,
-      collapsed: false,		
-      label: 'junction',
-      itemIcon: 'img/marker-icon-2x-red.png',
-      itemArrow: '&#10148',	
-      maxZoom: 18,
-      position: 'bottomleft'
-    },
-    // Метод обьединения опций, передаваемых в конструктор
-    initialize: function(options) {
-      L.Util.setOptions(this, options)
-      this._container = null
-      this._list = null
-      this._layer = this.options.layer || new L.LayerGroup()
-    },
-    // Метод добавления на карту контейнера со списком, добавление и обновление по событию moveend, возвращаем контейнер
-    onAdd: function (map) {
-      this._map = map
-      let container = this._container = L.DomUtil.create('div', 'list-markers') 
-      this._list = L.DomUtil.create('ul', 'list-markers-ul', container) 
-      map.on('moveend', this._updateList, this)
-      this._updateList()
+L.Control.RoutesCountColor = L.Control.extend({
+  includes: L.version[0]==='1' ? L.Evented.prototype : L.Mixin.Events,
 
-      return container
-    },
-    // Метод удаления с карты элементов контейнера, при отсутствии маркеров на данной области по событию moveend
-    onRemove: function(map) {
-      map.off('moveend', this._updateList, this)
-      this._container = null
-      this._list = null		
-    },
-    // Создание элементов ul li контейнера, работа с маркерами
-    _createItem: function(layer) {
-  
-      let li = L.DomUtil.create('li', 'list-markers-li'),
-        a = L.DomUtil.create('a', '', li),
-        icon = this.options.itemIcon ? '<img src="'+this.options.itemIcon+'" />' : '',
-        that = this
-  
-      a.href = '#'
-      L.DomEvent
-        .disableClickPropagation(a)
-        .on(a, 'click', L.DomEvent.stop, this)
-        .on(a, 'click', function(e) {
-          this._moveTo( layer.getLatLng() )
-        }, this)
-        .on(a, 'mouseover', function(e) {
-          that.fire('item-mouseover', {layer: layer })
-        }, this)
-        .on(a, 'mouseout', function(e) {
-          that.fire('item-mouseout', {layer: layer })
-        }, this)
-		
-      // console.log('_createItem',layer.options)
-  
-      if( layer.options.hasOwnProperty(this.options.label) )
-      {
-        a.innerHTML = icon+'<span>'+layer.options[this.options.label]+'</span> <b>'+this.options.itemArrow+'</b>'
-      }
-      else
-        console.log("propertyName '"+this.options.label+"' not found in marker")
-  
-      return li
-    },
-    // Метод обновления контейнера по существующим маркерам в видимой области 
-    _updateList: function() {
-    
-      let that = this,
-        n = 0
+  options: {		
+    layer: false,
+    routes: Number,
+    maxRoutes: Number,
+    position: 'topright'
+  },
 
-      this._list.innerHTML = ''
-      this._layer.eachLayer(function(layer) {
-        if(layer instanceof L.Marker)
-          if( that._map.getBounds().contains(layer.getLatLng()) )
-            if(++n < that.options.maxItems)
-              that._list.appendChild( that._createItem(layer) )
+  initialize: function(options) {
+    L.Util.setOptions(this, options)
+    this._container = null
+    this._list = null
+    this._layer = this.options.layer || new L.LayerGroup()
+  },
+
+  onAdd: function (map) {
+    this._map = map
+    let container = this._container = L.DomUtil.create('div', 'info legend'),
+        containerGrd = L.DomUtil.create('div', 'routes-gradient', container)
+    this._list = L.DomUtil.create('div', 'routes-count', container)
+    map.on('moveend', this._updateList, this)
+    this._updateList()
+
+    return container
+  },
+
+  onRemove: function(map) {
+    map.off('moveend', this._updateList, this)
+    this._container = null
+    this._list = null		
+  },
+
+  _getGradValue: function(c) {
+    return  c ==0.5 ? 5 : c > 0.9 ? 0 : c > 0.8 ? 1 : c > 0.7 ? 2 : c > 0.6 ? 3 : 
+            c > 0.5 ? 4 : c > 0.4 ? 6 : c > 0.3 ? 7 : c > 0.2 ? 8 : c > 0.1 ? 9 : 10;
+  },
+
+  _updateList: function() {
+    let routesCountArr = [], labels = [], that = this, routesMax
+    // Собираем видимые траектории в массив
+    this._layer.eachLayer(function(layer) {
+      if(layer instanceof L.Marker)
+        if( that._map.getBounds().contains(layer.getLatLng()) )
+          if(layer.options.routes)
+            routesCountArr.push(layer.options.routes)
+        routesMax = layer.options.maxRoutes
       })
-     },
-  
-    _moveTo: function(latlng) {
-      if(this.options.maxZoom)
-        this._map.setView(latlng, Math.min(this._map.getZoom(), this.options.maxZoom) )
-      else
-        this._map.panTo(latlng)    
-      }
-  })
-  
-  L.control.listMarkers = function (options) {
-      return new L.Control.ListMarkers(options)
+    // Сортируем массив траекторий по убыванию, 1 элемент - максимум
+    routesCountArr.sort(function(a, b) { return (b - a) })
+    this._list.innerHTML = ''
+    let routesCountRatio, routesNoRepetition = Array.from(new Set(routesCountArr)), gradValueIndex, step
+
+    for (i=0;i<=10;i++) { labels[i] = '<i></i>' }i=0
+    labels[0] = '<i>&#8734</i>'
+    labels[10] = '<i>0</i>'
+    // Отталкиваемся от количества значений нового массива routesNoRepetition
+    if (routesNoRepetition.length<=10) {
+      // Если значений хватает на количество ячеек, заполняем labels с индексом gradValueIndex значением routesNoRepetition[j]
+      for (i=0;i<routesNoRepetition.length;i++) {
+        routesCountRatio = routesNoRepetition[i] / routesMax
+        gradValueIndex = that._getGradValue(routesCountRatio)
+        labels[gradValueIndex] = '<i>' + routesNoRepetition[i] + '</i>'
+      }i=0
+    } else {
+      // Создаем шаг для размещения значений в 9 ячейках
+      step = Math.round(routesNoRepetition.length / 9)
+      labels[0] = '<i>' + routesMax + '</i>'
+      for (i=1;i<10;i++) {
+        if ((routesNoRepetition.includes(routesNoRepetition[i*step-1], 0))&&(routesNoRepetition[i*step-1] != 0)) {
+          routesCountRatio = routesNoRepetition[i*step-1] / routesMax
+          gradValueIndex = that._getGradValue(routesCountRatio)
+          labels[gradValueIndex] = '<i>' + routesNoRepetition[i*step-1] + '</i>'
+        } 
+      }i=0
+    }
+    this._list.innerHTML = labels.join('')
+  } 
+})
+    
+L.control.routesCountColor = function (options) {
+  return new L.Control.RoutesCountColor(options)
+}
+
+L.Map.addInitHook(function () {
+  if (this.options.routesCountColor) {
+    this.routesCountColor = L.control.routesCountColor(this.options.routesCountColor)
+    this.addControl(this.routesCountColor)
   }
-  //Constructor hooks
-  L.Map.addInitHook(function () {
-      if (this.options.listMarkersControl) {
-          this.listMarkersControl = L.control.listMarkers(this.options.listMarkersControl)
-          this.addControl(this.listMarkersControl)
-      }
-  })
+})
