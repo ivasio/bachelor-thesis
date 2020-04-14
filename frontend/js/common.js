@@ -1,5 +1,5 @@
 /* 
- * Leaflet List Junctions v1.0.1 - 2020-04-13 
+ * Leaflet List Junctions v1.0.1 - 2020-04-14 
  * 
  * Copyright 2020 Ivan Chebotar&Dmitry Tikhomirov 
  *  
@@ -37,6 +37,9 @@ map.addLayer(markersLayer)
 // Класс L.Control.RoutesCountColor - отображение количество траекторий развязок на шкале
 let list = new L.Control.RoutesCountColor({layer: markersLayer})
 map.addControl(list)
+
+let info = new L.Control.MarkerInfo({layer: markersLayer})
+map.addControl(info)
 
 class Junction {
   constructor (id = Number, name = String, latitude = Number, longitude = Number, radius = Number, maxRoutes = Number) {
@@ -79,11 +82,12 @@ class Junction {
     }).then(response => {
       return (this.addMarkerIcon(response))
     }).then(response => {
-      let marker = L.marker([this.longitude, this.latitude], {routes: routes, maxRoutes: this.maxRoutes, radius: this.radius}).setIcon(response).addTo(markersLayer).bindPopup(this.name)
+      let marker = L.marker([this.longitude, this.latitude], {name: this.name, routes: routes, maxRoutes: this.maxRoutes, radius: this.radius})
+      marker.setIcon(response).addTo(markersLayer).bindPopup('Развязка № ' + this.id)
       let activeCircle = false
       marker.on('click', function(e) {
         if (activeCircle) {map.removeLayer(activeCircle)}
-        activeCircle = L.circle(e.target.getLatLng(), {radius: this.options.radius , color: "#ff0000"}).addTo(map)
+        activeCircle = L.circle(e.target.getLatLng(), {radius: this.options.radius, color: "#ff0000"}).addTo(map)
       })
       marker.on('popupclose', function(e) {map.removeLayer(activeCircle)})
     })

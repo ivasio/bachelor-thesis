@@ -5,7 +5,7 @@ L.Control.RoutesCountColor = L.Control.extend({
     layer: false,
     routes: Number,
     maxRoutes: Number,
-    position: 'topright'
+    position: 'bottomright'
   },
 
   initialize: function(options) {
@@ -87,5 +87,56 @@ L.Map.addInitHook(function () {
   if (this.options.routesCountColor) {
     this.routesCountColor = L.control.routesCountColor(this.options.routesCountColor)
     this.addControl(this.routesCountColor)
+  }
+})
+
+L.Control.MarkerInfo = L.Control.extend({
+  includes: L.version[0]==='1' ? L.Evented.prototype : L.Mixin.Events,
+
+  options: {		
+    layer: false,
+    name: String,
+    routes: Number,
+    radius: Number,
+    position: 'topright'
+  },
+
+  initialize: function(options) {
+    L.Util.setOptions(this, options)
+    this._layer = this.options.layer || new L.LayerGroup()
+  },
+
+  onAdd: function (map) {
+    let info = this._info = L.DomUtil.create('div', 'info info-junction')
+    this._update()
+    return info
+  },
+  _update: function() {
+    that = this
+    that._info.innerHTML = '<h4>Информация о развязке</h4>'
+
+    map.on('popupopen', function(e) {
+      if (e.popup._source.options) {
+        that._info.innerHTML = '<h4>Информация о развязке</h4><h5>Name: </h5><p>' + e.popup._source.options.name + 
+        '</p><h5>Routes: </h5><p>' + e.popup._source.options.routes + 
+        '</p><h5>Radius: </h5><p>' + e.popup._source.options.radius + '</p>'
+      } else {
+        this._info.innerHTML = '<h4>Информация о развязке</h4>'
+      }
+    })
+    map.on('popupclose', function() {
+      that._info.innerHTML = '<h4>Информация о развязке</h4>'
+    })
+  } 
+})
+    
+L.control.markerInfo = function (options) {
+  return new L.Control.MarkerInfo(options)
+}
+
+L.Map.addInitHook(function () {
+  if (this.options.markerInfo) {
+    this.markerInfo = L.control.markerInfo(this.options.markerInfo)
+    this.addControl(this.markerInfo)
   }
 })
