@@ -67,4 +67,10 @@ public class Junction {
     public Set<Route> getRoutes() {
         return routes;
     }
+
+    public boolean containsPoint(Point point) {
+        float longitudeDiff = longitude - point.getLongitude();
+        float latitudeDiff = latitude - point.getLatitude();
+        return longitudeDiff * longitudeDiff + latitudeDiff * latitudeDiff <= radius * radius;
+    }
 }
