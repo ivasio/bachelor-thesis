@@ -2,17 +2,17 @@ package com.ivasio.bachelor_thesis.event_processor
 
 import java.util.Properties
 
-import org.apache.flink.streaming.api.scala._
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
+import com.ivasio.bachelor_thesis.shared.models.Junction
+import com.ivasio.bachelor_thesis.shared.serialization.{AvroFlinkSerializable, SourcedPoint}
+import org.apache.flink.api.java.io.jdbc.JDBCOutputFormat
 import org.apache.flink.formats.avro.AvroDeserializationSchema
+import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows
 import org.apache.flink.streaming.api.windowing.time.Time
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
 import org.apache.flink.table.api.EnvironmentSettings
 import org.apache.flink.table.api.scala.StreamTableEnvironment
 import org.apache.flink.table.descriptors.{Avro, Kafka}
-
-import com.ivasio.bachelor_thesis.shared.models.Junction
-import com.ivasio.bachelor_thesis.shared.serialization.{AvroFlinkSerializable, SourcedPoint}
 
 
 object RouteProcessor {
@@ -21,15 +21,16 @@ object RouteProcessor {
     val (env, tableEnv) = setupEnvironments()
 
     val points = setupKafkaSourceStream[SourcedPoint](env, "source_points")
-    val junctions = setupKafkaSourceStream[Junction](env, "source_points")
+    val junctions = setupKafkaSourceStream[Junction](env, "source_junctions")
 
     points
       .connect(junctions)
       .keyBy(_.getSourceId, _ => 0)
       .flatMap(new RouteFilterFunction())
-      .keyBy(_._2)
+      .keyBy(_._2) // todo add event time, lateness
       .window(EventTimeSessionWindows.withGap(Time.minutes(2)))
-      // WindowedStream -> DataStream doesn't seem to be possible. todo use Table or other workaround
+      .aggregate(new SquashPointsProcessFunction)
+      // .addSink()
   }
 
   def setupEnvironments() : (StreamExecutionEnvironment, StreamTableEnvironment) = {
@@ -50,6 +51,17 @@ object RouteProcessor {
       )
     ) // todo add event time, watermarks
 
+  }
+
+  def setupJDBCOutputFormat(): JDBCOutputFormat = {
+    JDBCOutputFormat.buildJDBCOutputFormat()
+      .setDrivername("org.postgresql.Driver")
+      .setDBUrl("jdbc:postgresql://host:port/database_name")
+      .setUsername("user")
+      .setPassword("password")
+      .setQuery("INSERT INTO table VALUES (?, ?, ?, ?)")
+      .setBatchInterval(100)
+      .finish()
   }
 
   def setupKafkaSourceTable[Record <: AvroFlinkSerializable](tableEnv: StreamTableEnvironment, topicName: String,

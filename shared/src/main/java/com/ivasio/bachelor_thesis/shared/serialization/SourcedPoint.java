@@ -1,9 +1,9 @@
 package com.ivasio.bachelor_thesis.shared.serialization;
 
+import com.ivasio.bachelor_thesis.shared.models.Point;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
-
-import com.ivasio.bachelor_thesis.shared.models.Point;
 
 
 public class SourcedPoint extends Point {
@@ -18,5 +18,8 @@ public class SourcedPoint extends Point {
         return sourceId;
     }
 
+    public Point toPoint() {
+        return new Point(getId(), getLongitude(), getLatitude(), getTimestamp());
+    }
 
 }
