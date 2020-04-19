@@ -9,6 +9,11 @@ import java.util.UUID;
 public class SourcedPoint extends Point {
     private UUID sourceId;
 
+    public SourcedPoint(float longitude, float latitude, OffsetDateTime timestamp, UUID sourceId) {
+        super(longitude, latitude, timestamp);
+        this.sourceId = sourceId;
+    }
+
     public SourcedPoint(long id, float longitude, float latitude, OffsetDateTime timestamp, UUID sourceId) {
         super(id, longitude, latitude, timestamp);
         this.sourceId = sourceId;
@@ -19,7 +24,7 @@ public class SourcedPoint extends Point {
     }
 
     public Point toPoint() {
-        return new Point(getId(), getLongitude(), getLatitude(), getTimestamp());
+        return new Point(getLongitude(), getLatitude(), getTimestamp());
     }
 
 }

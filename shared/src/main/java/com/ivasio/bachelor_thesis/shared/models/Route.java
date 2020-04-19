@@ -23,7 +23,7 @@ public class Route {
     @OneToMany(mappedBy="route", fetch=FetchType.LAZY)
     private List<Point> points;
 
-    protected Route() {}
+    public Route() {}
 
     public Route(long id, Junction junction) {
         this.id = id;
@@ -36,6 +36,10 @@ public class Route {
 
     public Junction getJunction() {
         return junction;
+    }
+
+    public void setJunction(Junction junction) {
+        this.junction = junction;
     }
 
     public List<Point> getPoints() {
