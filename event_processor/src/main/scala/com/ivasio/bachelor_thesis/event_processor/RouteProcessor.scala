@@ -12,39 +12,41 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
 
 
 object RouteProcessor {
+  val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
 
   def main(args: Array[String]) {
-    val env = setupEnvironments()
+    val points = setupKafkaSourceStream[SourcedPoint]("source_points")
+    val junctions = setupKafkaSourceStream[JunctionUpdate]("source_junctions")
 
-    val points = setupKafkaSourceStream[SourcedPoint](env, "source_points")
-    val junctions = setupKafkaSourceStream[JunctionUpdate](env, "source_junctions")
-
-    points
+    val filteredPoints = points
+        .assignAscendingTimestamps(_.timestamp.getEpochSecond)
       .connect(junctions)
       .keyBy(_.sourceId, _ => 0)
       .flatMap(new RouteFilterFunction)
-      .keyBy(_._2) // todo add event time, lateness
+
+    filteredPoints
+      .keyBy(_._2)
       .window(EventTimeSessionWindows.withGap(Time.minutes(2)))
-      .aggregate(new SquashPointsProcessFunction)
+        .allowedLateness(Time.minutes(3))
+        .aggregate(new SquashPointsProcessFunction)
       .addSink(new PointsListJDBCSinkFunction)
   }
 
-  def setupEnvironments() : StreamExecutionEnvironment = {
-    StreamExecutionEnvironment.getExecutionEnvironment
-  }
 
-  def setupKafkaSourceStream[Record](env: StreamExecutionEnvironment, topicName: String)
-                                    (implicit avro: AvroDeserializable[Record]) : DataStream[Record] = {
+  def setupKafkaSourceStream[Record](topicName: String)(implicit avro: AvroDeserializable[Record])
+      : DataStream[Record] = {
     val kafkaProperties = new Properties()
     kafkaProperties.setProperty("bootstrap.servers", "localhost:9092")
     kafkaProperties.setProperty("group.id", "route_processor")
 
-    env.addSource(
-      new FlinkKafkaConsumer[GenericRecord](
-        topicName,
-        AvroDeserializationSchema.forGeneric(avro.schema), kafkaProperties
+    env
+      .addSource(
+        new FlinkKafkaConsumer[GenericRecord](
+          topicName,
+          AvroDeserializationSchema.forGeneric(avro.schema), kafkaProperties
+        )
       )
-    ).map(avro.fromGenericRecord)
+      .map(avro.fromGenericRecord)
   }
 
 }
