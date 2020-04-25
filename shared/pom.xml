@@ -19,6 +19,4 @@
     </parent>
     <artifactId>shared</artifactId>
 
-<!--    todo add joda time-->
-
 </project>

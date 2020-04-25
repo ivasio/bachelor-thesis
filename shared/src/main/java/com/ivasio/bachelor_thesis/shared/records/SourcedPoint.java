@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 
-public class SourcedPoint extends AvroRecord {
+public class SourcedPoint extends AvroRecord<SourcedPoint> {
     public UUID sourceId;
     public float longitude;
     public float latitude;
@@ -19,7 +19,7 @@ public class SourcedPoint extends AvroRecord {
     @Override
     public Schema getSchema() {
         return SchemaBuilder.record("SourcedPoint")
-            .namespace("com.ivasio.bachelor_thesis.shared.serialization")
+            .namespace("com.ivasio.bachelor_thesis.shared.records")
             .fields()
                 .requiredFloat("longitude")
                 .requiredFloat("latitude")
@@ -33,9 +33,19 @@ public class SourcedPoint extends AvroRecord {
         GenericRecord record = new GenericData.Record(getSchema());
         record.put("longitude", longitude);
         record.put("latitude", latitude);
-        record.put("timestamp", timestamp);
-        record.put("sourceId", sourceId);
+        record.put("timestamp", timestamp.getEpochSecond());
+        record.put("sourceId", sourceId.toString());
         return record;
+    }
+
+    @Override
+    public SourcedPoint fromGenericRecord(GenericRecord genericRecord) {
+        return new SourcedPoint(
+            UUID.fromString((String)genericRecord.get("sourceId")),
+            (float)genericRecord.get("longitude"),
+            (float)genericRecord.get("latitude"),
+            Instant.ofEpochSecond((long)genericRecord.get("timestamp"))
+        );
     }
 
     public SourcedPoint() {}

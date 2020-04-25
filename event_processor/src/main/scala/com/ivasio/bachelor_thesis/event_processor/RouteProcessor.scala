@@ -2,7 +2,6 @@ package com.ivasio.bachelor_thesis.event_processor
 
 import java.util.Properties
 
-import com.ivasio.bachelor_thesis.shared.models.Junction
 import com.ivasio.bachelor_thesis.shared.records._
 import org.apache.avro.generic.GenericRecord
 import org.apache.flink.formats.avro.AvroDeserializationSchema
@@ -18,7 +17,7 @@ object RouteProcessor {
     val env = setupEnvironments()
 
     val points = setupKafkaSourceStream[SourcedPoint](env, "source_points")
-    val junctions = setupKafkaSourceStream[Junction](env, "source_junctions")
+    val junctions = setupKafkaSourceStream[JunctionUpdate](env, "source_junctions")
 
     points
       .connect(junctions)
