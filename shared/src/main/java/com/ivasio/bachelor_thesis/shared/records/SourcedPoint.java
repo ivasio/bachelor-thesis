@@ -11,10 +11,10 @@ import java.util.UUID;
 
 
 public class SourcedPoint extends AvroRecord {
-    public final UUID sourceId;
-    public final float longitude;
-    public final float latitude;
-    public final Instant timestamp;
+    public UUID sourceId;
+    public float longitude;
+    public float latitude;
+    public Instant timestamp;
 
     @Override
     public Schema getSchema() {
@@ -37,6 +37,8 @@ public class SourcedPoint extends AvroRecord {
         record.put("sourceId", sourceId);
         return record;
     }
+
+    public SourcedPoint() {}
 
     public SourcedPoint(UUID sourceId, float longitude, float latitude, Instant timestamp) {
         this.sourceId = sourceId;

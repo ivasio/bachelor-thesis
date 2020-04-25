@@ -34,21 +34,18 @@ object RouteProcessor {
     StreamExecutionEnvironment.getExecutionEnvironment
   }
 
-  def setupKafkaSourceStream[Record <: AvroRecord](env: StreamExecutionEnvironment,
-                                                   topicName: String) : DataStream[Record] = {
+  def setupKafkaSourceStream[Record](env: StreamExecutionEnvironment, topicName: String)
+                                    (implicit avro: AvroDeserializable[Record]) : DataStream[Record] = {
     val kafkaProperties = new Properties()
     kafkaProperties.setProperty("bootstrap.servers", "localhost:9092")
     kafkaProperties.setProperty("group.id", "route_processor")
 
-    val schema = new Record().getSchema()
     env.addSource(
       new FlinkKafkaConsumer[GenericRecord](
         topicName,
-        AvroDeserializationSchema.forGeneric(schema), kafkaProperties
+        AvroDeserializationSchema.forGeneric(avro.schema), kafkaProperties
       )
-    )
-    // constructor from GenericRecord
-
+    ).map(avro.fromGenericRecord)
   }
 
 }
