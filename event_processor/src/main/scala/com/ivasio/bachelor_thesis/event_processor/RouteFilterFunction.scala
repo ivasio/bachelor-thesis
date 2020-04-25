@@ -1,11 +1,9 @@
 package com.ivasio.bachelor_thesis.event_processor
 
 import com.ivasio.bachelor_thesis.shared.models.Junction
-import com.ivasio.bachelor_thesis.shared.serialization.SourcedPoint
-import org.apache.flink.api.common.state.{ListState, ListStateDescriptor, MapState, MapStateDescriptor, ValueStateDescriptor}
-import org.apache.flink.api.java.tuple.Tuple
-import org.apache.flink.streaming.api.functions.KeyedProcessFunction
-import org.apache.flink.streaming.api.functions.co.{KeyedCoProcessFunction, RichCoFlatMapFunction}
+import com.ivasio.bachelor_thesis.shared.records.SourcedPoint
+import org.apache.flink.api.common.state.{MapState, MapStateDescriptor}
+import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction
 import org.apache.flink.util.Collector
 
 
@@ -16,7 +14,7 @@ class RouteFilterFunction extends RichCoFlatMapFunction[SourcedPoint, Junction, 
 
   override def flatMap1(point: SourcedPoint, out: Collector[(SourcedPoint, Long)]): Unit = {
     junctionsStore.values.forEach(junction => {
-      if (junction.containsPoint(point)) out.collect(point, junction.getId)
+      if (junction.containsPoint(point.toPoint)) out.collect(point, junction.getId)
     })
   }
 

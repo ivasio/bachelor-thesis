@@ -1,7 +1,7 @@
 package com.ivasio.bachelor_thesis.event_processor
 
 import com.ivasio.bachelor_thesis.shared.models.Point
-import com.ivasio.bachelor_thesis.shared.serialization.SourcedPoint
+import com.ivasio.bachelor_thesis.shared.records.SourcedPoint
 import org.apache.flink.api.common.functions.AggregateFunction
 
 
