@@ -7,12 +7,12 @@ import scala.math._
 import scala.util.Random
 
 
-object  PointPublisher {
+object PointPublisher {
 
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     val junction = new Junction(1, "name", 34.0f, 45.0f, 1000)
     generatePoints(junction).foreach{ case (x, y) =>
-      print(x, y)
+      println(x, y)
       Thread.sleep(2000)
     }
   }
@@ -33,10 +33,23 @@ object  PointPublisher {
 }
 
 
+//class Producer {
+//  Producer() {
+//    val props = new Properties()
+//    props.put("bootstrap.servers", "localhost:9094")
+//    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+//    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+//    val producer = new KafkaProducer[String, String](props)
+//    val record = new ProducerRecord[String, String](topic, "key", "value")
+//    producer.send(record)
+//    producer.close()
+//  }
+//}
+
 object DistanceConverter {
   val met: Double = 500.0
   val coord: Double = hypot(55.59307 - 55.59037, 37.73252 - 37.72585)
 
-  def toCoordinates(meters: Double): Double = meters / met * coord;
-  def toMeters(coordinates: Double): Double = coordinates / coord * met;
+  def toCoordinates(meters: Double): Double = meters / met * coord
+  def toMeters(coordinates: Double): Double = coordinates / coord * met
 }

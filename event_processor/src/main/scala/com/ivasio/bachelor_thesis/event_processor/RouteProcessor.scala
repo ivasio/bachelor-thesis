@@ -4,6 +4,7 @@ import java.util.Properties
 
 import com.ivasio.bachelor_thesis.shared.records._
 import org.apache.avro.generic.GenericRecord
+import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.formats.avro.AvroDeserializationSchema
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows
@@ -33,7 +34,7 @@ object RouteProcessor {
   }
 
 
-  def setupKafkaSourceStream[Record](topicName: String)(implicit avro: AvroDeserializable[Record])
+  def setupKafkaSourceStream[Record : TypeInformation](topicName: String)(implicit avro: AvroDeserializable[Record])
       : DataStream[Record] = {
     val kafkaProperties = new Properties()
     kafkaProperties.setProperty("bootstrap.servers", "localhost:9092")
@@ -46,7 +47,7 @@ object RouteProcessor {
           AvroDeserializationSchema.forGeneric(avro.schema), kafkaProperties
         )
       )
-      .map(avro.fromGenericRecord)
+      .map(avro.fromGenericRecord _)
   }
 
 }
