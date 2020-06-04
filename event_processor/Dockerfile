@@ -9,12 +9,12 @@ COPY ./pom.xml ./pom.xml
 COPY ./web_server/pom.xml ./web_server/pom.xml
 COPY ./shared/pom.xml ./shared/pom.xml
 COPY ./event_processor/pom.xml ./event_processor/pom.xml
-RUN mvn -pl .,shared,web_server dependency:go-offline
+RUN mvn dependency:go-offline verify --fail-never
 
 COPY . .
-RUN mvn -pl .,shared,web_server package
+RUN mvn -pl .,shared,event_processor package
 
 # Package image
 FROM openjdk:8-jre-alpine
-COPY --from=target /build/web_server/target/web_server-*.jar /web_server-0.1.jar
-ENTRYPOINT java -jar /web_server-0.1.jar
+COPY --from=target /build/event_processor/target/event_processor-*.jar /event_processor-*.jar
+ENTRYPOINT java -jar /event_processor-*.jar

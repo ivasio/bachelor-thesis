@@ -9,6 +9,7 @@
         <groupId>com.ivasio.bachelor-thesis</groupId>
         <version>0.2</version>
     </parent>
+
     <artifactId>web_server</artifactId>
 
     <properties>
@@ -36,7 +37,7 @@
         <dependency>
             <groupId>com.ivasio.bachelor-thesis</groupId>
             <artifactId>shared</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
             <scope>compile</scope>
         </dependency>
 
