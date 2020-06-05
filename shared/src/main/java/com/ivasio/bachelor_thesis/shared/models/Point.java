@@ -1,11 +1,10 @@
 package com.ivasio.bachelor_thesis.shared.models;
 
-import java.time.OffsetDateTime;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 
 @Entity
@@ -24,20 +23,23 @@ public class Point {
     private float latitude;
 
     @ApiModelProperty(notes = "Метка времени точки")
-    private OffsetDateTime timestamp;
+    private Instant timestamp;
 
     @ManyToOne
     @JoinColumn(name="route_id", nullable=false)
     private Route route;
 
-
     protected Point() {}
 
-    public Point(long id, float longitude, float latitude, OffsetDateTime timestamp) {
-        this.id = id;
+    public Point(float longitude, float latitude, Instant timestamp){
         this.longitude = longitude;
         this.latitude = latitude;
         this.timestamp = timestamp;
+    }
+
+    public Point(long id, float longitude, float latitude, Instant timestamp) {
+        this(longitude, latitude, timestamp);
+        this.id = id;
     }
 
     public long getId() {
@@ -52,11 +54,15 @@ public class Point {
         return latitude;
     }
 
-    public OffsetDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
     public Route getRoute() {
         return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 }

@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/event_processing/aggregator/aggregator.iml" filepath="$PROJECT_DIR$/event_processing/aggregator/aggregator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/event_processing/event_processing.iml" filepath="$PROJECT_DIR$/event_processing/event_processing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/event_processing/publisher/publisher.iml" filepath="$PROJECT_DIR$/event_processing/publisher/publisher.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared/shared.iml" filepath="$PROJECT_DIR$/shared/shared.iml" />
       <module fileurl="file://$PROJECT_DIR$/thesis.iml" filepath="$PROJECT_DIR$/thesis.iml" />
       <module fileurl="file://$PROJECT_DIR$/web_server/web_server.iml" filepath="$PROJECT_DIR$/web_server/web_server.iml" />

@@ -1,11 +1,11 @@
 package com.ivasio.bachelor_thesis.shared.models;
 
-import java.util.Set;
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.persistence.*;
+import java.util.Set;
 
 
 @Entity
@@ -67,4 +67,5 @@ public class Junction {
     public Set<Route> getRoutes() {
         return routes;
     }
+
 }
