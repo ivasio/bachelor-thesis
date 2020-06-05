@@ -1,7 +1,6 @@
 package com.ivasio.bachelor_thesis.event_aggregator
 
-import java.util.Properties
-
+import com.ivasio.bachelor_thesis.shared.configuration.KafkaProducerConfig
 import com.ivasio.bachelor_thesis.shared.records._
 import org.apache.avro.generic.GenericRecord
 import org.apache.flink.api.common.typeinfo.TypeInformation
@@ -36,16 +35,14 @@ object RouteProcessor {
 
   def setupKafkaSourceStream[Record : TypeInformation](topicName: String)(implicit avro: AvroDeserializable[Record])
       : DataStream[Record] = {
-    val kafkaProperties = new Properties()
-    kafkaProperties.setProperty("bootstrap.servers", "localhost:9092")
-    kafkaProperties.setProperty("group.id", "route_processor")
 
+    val config = new KafkaProducerConfig()
     //noinspection ConvertibleToMethodValue
     env
       .addSource(
         new FlinkKafkaConsumer[GenericRecord](
           topicName,
-          AvroDeserializationSchema.forGeneric(avro.schema), kafkaProperties
+          AvroDeserializationSchema.forGeneric(avro.schema), config.getProperties
         )
       )
       .map(avro.fromGenericRecord _)
