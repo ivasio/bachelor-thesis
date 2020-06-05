@@ -1,5 +1,9 @@
 package com.ivasio.bachelor_thesis.event_aggregator
 
+import com.ivasio.bachelor_thesis.shared.records._
+import org.apache.avro.Schema
+import org.apache.avro.generic.GenericRecord
+
 
 trait AvroDeserializable[Record] {
   val schema: Schema

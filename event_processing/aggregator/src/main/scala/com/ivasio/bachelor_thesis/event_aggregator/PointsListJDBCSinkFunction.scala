@@ -1,5 +1,10 @@
 package com.ivasio.bachelor_thesis.event_aggregator
 
+import com.ivasio.bachelor_thesis.shared.models._
+import org.apache.flink.streaming.api.functions.sink.SinkFunction
+import org.hibernate.SessionFactory
+import org.hibernate.cfg.Configuration
+
 
 class PointsListJDBCSinkFunction extends SinkFunction[(List[Point], Long)] {
 

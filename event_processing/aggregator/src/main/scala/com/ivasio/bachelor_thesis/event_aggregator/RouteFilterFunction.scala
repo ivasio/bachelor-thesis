@@ -1,5 +1,10 @@
 package com.ivasio.bachelor_thesis.event_aggregator
 
+import com.ivasio.bachelor_thesis.shared.records._
+import org.apache.flink.api.common.state.{MapState, MapStateDescriptor}
+import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction
+import org.apache.flink.util.Collector
+
 
 class RouteFilterFunction extends RichCoFlatMapFunction[SourcedPoint, JunctionUpdate, (SourcedPoint, Long)] {
 
