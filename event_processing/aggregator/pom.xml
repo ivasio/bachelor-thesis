@@ -2,22 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>thesis</artifactId>
+        <artifactId>event_processor</artifactId>
         <groupId>com.ivasio.bachelor-thesis</groupId>
         <version>0.2</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>shared</artifactId>
+    <artifactId>aggregator</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.8.2</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+    <properties>
+        <start-class>com.ivasio.bachelor_thesis.event_aggregator.RouteProcessor</start-class>
+    </properties>
 
 </project>

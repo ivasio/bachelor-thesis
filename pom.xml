@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>0.2</version>
     <modules>
-        <module>event_processor</module>
+        <module>event_processing</module>
         <module>web_server</module>
         <module>shared</module>
     </modules>
@@ -49,6 +49,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>

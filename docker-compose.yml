@@ -18,22 +18,20 @@ services:
     ports:
       - "8888:8080"
 
-  event_processor:
-    image: ivasio/event_processor
-    command: com.ivasio.bachelor_thesis.event_processor.RouteProessor
+  event_aggregator:
+    image: ivasio/event_aggregator
     build:
-      dockerfile: event_processor/Dockerfile
+      dockerfile: event_processing/aggregator/Dockerfile
       context: .
     restart: always
     depends_on:
       - kafka
       - postgres
 
-  event_pusher:
-    image: ivasio/event_processor
-    command: com.ivasio.bachelor_thesis.event_pusher.pointPublisher
+  event_publisher:
+    image: ivasio/event_publisher
     build:
-      dockerfile: event_processor/Dockerfile
+      dockerfile: event_processing/publisher/Dockerfile
       context: .
     restart: always
     depends_on:

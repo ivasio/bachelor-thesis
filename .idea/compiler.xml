@@ -6,13 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="event_processor" />
+        <module name="aggregator" />
         <module name="shared" />
         <module name="web_server" />
+        <module name="publisher" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="event_processor" target="8" />
+      <module name="aggregator" target="8" />
+      <module name="event_processing" target="8" />
+      <module name="publisher" target="8" />
       <module name="shared" target="8" />
       <module name="thesis" target="8" />
       <module name="web_server" target="8" />
