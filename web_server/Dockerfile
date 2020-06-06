@@ -14,7 +14,7 @@ COPY ./event_processing/publisher/pom.xml ./event_processing/publisher/pom.xml
 RUN mvn dependency:go-offline
 
 COPY . .
-RUN mvn -pl .,shared,web_server package
+RUN mvn package
 
 # Package image
 FROM openjdk:8-jre-alpine

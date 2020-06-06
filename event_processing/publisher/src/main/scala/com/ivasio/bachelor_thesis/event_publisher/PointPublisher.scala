@@ -19,7 +19,7 @@ import scala.util.Random
 object PointPublisher {
 
   def main(args: Array[String]): Unit = {
-    val junction = new Junction(1, "name", 34.0f, 45.0f, 1000)
+    val junction = new Junction(1, "МКАД - ш. Энтузиастов", 37.84270f, 55.77692f, 1000)
     publishPoints(junction)
   }
 
@@ -52,7 +52,7 @@ object PointPublisher {
 
 class Producer() {
   val properties: Properties = new SourcedPointKafkaProducerConfig().getProperties
-  properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer)
+  properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[UUIDSerializer])
   val producer: KafkaProducer[UUID, GenericRecord] = new KafkaProducer[UUID, GenericRecord](properties)
 
   def send(point: SourcedPoint): Future[RecordMetadata] = producer.send(
