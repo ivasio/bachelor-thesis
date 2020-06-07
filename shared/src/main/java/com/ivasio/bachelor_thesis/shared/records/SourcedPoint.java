@@ -17,6 +17,11 @@ public class SourcedPoint extends AvroRecord<SourcedPoint> {
     public Instant timestamp;
 
     @Override
+    public String getTopicName() {
+        return "source_points";
+    }
+
+    @Override
     public Schema getSchema() {
         return SchemaBuilder.record("SourcedPoint")
             .namespace("com.ivasio.bachelor_thesis.shared.records")

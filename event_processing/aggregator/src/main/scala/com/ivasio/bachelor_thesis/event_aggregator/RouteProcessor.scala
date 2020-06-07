@@ -3,7 +3,6 @@ package com.ivasio.bachelor_thesis.event_aggregator
 import com.ivasio.bachelor_thesis.shared.configuration.KafkaProducerConfig
 import com.ivasio.bachelor_thesis.shared.records._
 import org.apache.avro.generic.GenericRecord
-import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.formats.avro.AvroDeserializationSchema
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows
@@ -15,8 +14,8 @@ object RouteProcessor {
   val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
 
   def main(args: Array[String]) {
-    val points = setupKafkaSourceStream[SourcedPoint]("source_points")
-    val junctions = setupKafkaSourceStream[JunctionUpdate]("source_junctions")
+    val junctions = setupJunctionsSourceStream
+    val points = setupPointsSourceStream
 
     val filteredPoints = points
         .assignAscendingTimestamps(_.timestamp.getEpochSecond)
@@ -32,20 +31,34 @@ object RouteProcessor {
       .addSink(new PointsListJDBCSinkFunction)
   }
 
-
-  def setupKafkaSourceStream[Record : TypeInformation](topicName: String)(implicit avro: AvroDeserializable[Record])
-      : DataStream[Record] = {
-
+  def setupPointsSourceStream: DataStream[SourcedPoint] = {
+    val schemaStore = new SourcedPoint()
+    @transient lazy val deserializer = new SourcedPoint()
     val config = new KafkaProducerConfig()
-    //noinspection ConvertibleToMethodValue
+
     env
       .addSource(
         new FlinkKafkaConsumer[GenericRecord](
-          topicName,
-          AvroDeserializationSchema.forGeneric(avro.schema), config.getProperties
+          schemaStore.getTopicName,
+          AvroDeserializationSchema.forGeneric(schemaStore.getSchema), config.getProperties
         )
       )
-      .map(avro.fromGenericRecord _)
+      .map(entry => deserializer.fromGenericRecord(entry))
+  }
+
+  def setupJunctionsSourceStream: DataStream[JunctionUpdate] = {
+    val schemaStore = new JunctionUpdate()
+    @transient lazy val deserializer = new JunctionUpdate()
+    val config = new KafkaProducerConfig()
+
+    env
+      .addSource(
+        new FlinkKafkaConsumer[GenericRecord](
+          schemaStore.getTopicName,
+          AvroDeserializationSchema.forGeneric(schemaStore.getSchema), config.getProperties
+        )
+      )
+      .map(entry => deserializer.fromGenericRecord(entry))
   }
 
 }

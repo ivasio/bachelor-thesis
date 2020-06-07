@@ -13,6 +13,11 @@ public class JunctionUpdate extends AvroRecord<JunctionUpdate> {
     public float radius;
 
     @Override
+    public String getTopicName() {
+        return "source_junctions";
+    }
+
+    @Override
     public Schema getSchema() {
         return SchemaBuilder.record("JunctionUpdate")
             .namespace("com.ivasio.bachelor_thesis.shared.records")
