@@ -8,11 +8,11 @@ services:
     build:
       dockerfile: web_server/Dockerfile
       context: .
-    restart: always
     environment:
       POSTGRES_URL: jdbc:postgresql://postgres/thesis
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - postgres
     ports:
@@ -23,7 +23,8 @@ services:
     build:
       dockerfile: event_processing/aggregator/Dockerfile
       context: .
-    restart: always
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - kafka
       - postgres
@@ -33,7 +34,8 @@ services:
     build:
       dockerfile: event_processing/publisher/Dockerfile
       context: .
-    restart: always
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - kafka
 
@@ -57,10 +59,13 @@ services:
   kafka:
     image: wurstmeister/kafka
     ports:
-      - "9092:9092"
+      - "9094:9094"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
-      KAFKA_CREATE_TOPICS: "test:1:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: DOCKER://kafka:9092,LOCALHOST://kafka:9094
+      KAFKA_ADVERTISED_LISTENERS: DOCKER://kafka:9092,LOCALHOST://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER:PLAINTEXT,LOCALHOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+      KAFKA_CREATE_TOPICS: "source_points:1:1,source_junctions:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

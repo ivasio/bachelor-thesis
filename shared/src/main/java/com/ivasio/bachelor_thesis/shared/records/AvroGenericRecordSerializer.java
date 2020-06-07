@@ -8,11 +8,10 @@ import org.apache.kafka.common.serialization.Serializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 
-public class AvroGenericRecordSerializer implements Serializer<List<GenericRecord>> {
+public class AvroGenericRecordSerializer implements Serializer<GenericRecord> {
 
     private Schema schema = null;
 
@@ -20,18 +19,16 @@ public class AvroGenericRecordSerializer implements Serializer<List<GenericRecor
         schema = (Schema) map.get("SCHEMA");
     }
 
-    @Override public byte[] serialize(String arg0, List<GenericRecord> records) {
+    @Override public byte[] serialize(String arg0, GenericRecord record) { //List<GenericRecord> records) {
         byte[] retVal = null;
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         GenericDatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
 
-        DataFileWriter dataFileWriter = new DataFileWriter<>(datumWriter);
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter);
         try {
             dataFileWriter.create(schema, outputStream);
-            for (GenericRecord record : records) {
-                dataFileWriter.append(record);
-            }
+            dataFileWriter.append(record);
             dataFileWriter.flush();
             dataFileWriter.close();
             retVal = outputStream.toByteArray();

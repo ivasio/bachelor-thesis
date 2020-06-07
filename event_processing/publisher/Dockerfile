@@ -14,9 +14,9 @@ COPY ./event_processing/publisher/pom.xml ./event_processing/publisher/pom.xml
 RUN mvn dependency:go-offline
 
 COPY . .
-RUN mvn -pl .,shared,event_processing,event_processing/publisher package
+RUN mvn package
 
 # Package image
 FROM openjdk:8-jre-alpine
-COPY --from=target /build/event_processing/publisher/target/publisher-*.jar /
-ENTRYPOINT java -jar /publisher-*.jar
+COPY --from=target /build/event_processing/publisher/target/publisher-*-with-dependencies.jar /
+ENTRYPOINT java -jar /publisher-*-with-dependencies.jar
