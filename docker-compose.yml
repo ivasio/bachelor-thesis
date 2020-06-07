@@ -12,7 +12,7 @@ services:
       POSTGRES_URL: jdbc:postgresql://postgres/thesis
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - postgres
     ports:
@@ -24,7 +24,7 @@ services:
       dockerfile: event_processing/aggregator/Dockerfile
       context: .
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - kafka
       - postgres
@@ -35,7 +35,7 @@ services:
       dockerfile: event_processing/publisher/Dockerfile
       context: .
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9094
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - kafka
 

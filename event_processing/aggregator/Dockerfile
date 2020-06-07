@@ -17,6 +17,6 @@ COPY . .
 RUN mvn package
 
 # Package image
-FROM openjdk:8-jre-alpine
-COPY --from=target /build/event_processing/aggregator/target/aggregator-*.jar /
-ENTRYPOINT java -jar /aggregator-*.jar
+FROM flink:1.10.0-scala_2.12
+COPY --from=target /build/event_processing/aggregator/target/aggregator-*-with-dependencies.jar /
+ENTRYPOINT java -jar /aggregator-*-with-dependencies.jar
