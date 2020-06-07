@@ -1,16 +1,16 @@
 package com.ivasio.bachelor_thesis.shared.configuration;
 
-import org.apache.commons.configuration2.SystemConfiguration;
+import org.apache.commons.configuration2.EnvironmentConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class PostgresConfig {
-    protected final SystemConfiguration systemConfig = new SystemConfiguration();
+    protected final EnvironmentConfiguration systemConfig = new EnvironmentConfiguration();
 
     public Map<String, Object> getProperties() {
-        final Map<String, Object> properties = new HashMap<String, Object>();
+        final Map<String, Object> properties = new HashMap<>();
         properties.put("POSTGRES_HOST", systemConfig.getString("POSTGRES_HOST"));
         properties.put("POSTGRES_PORT", systemConfig.getInt("POSTGRES_PORT", 5432));
         properties.put("POSTGRES_DB", "main");

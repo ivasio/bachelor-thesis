@@ -1,7 +1,6 @@
 package com.ivasio.bachelor_thesis.event_publisher
 
 import java.time.Instant
-import java.util.concurrent.Future
 import java.util.{Properties, UUID}
 
 import com.ivasio.bachelor_thesis.shared.configuration.SourcedPointKafkaProducerConfig
@@ -28,7 +27,12 @@ object PointPublisher {
     val producer = new Producer
     generateCoordinates(junction)
       .map{case (x, y) => new SourcedPoint(sourceId, x, y, Instant.now())}
-      .foreach(producer.send)
+      .map(producer.send)
+      .foreach {point =>
+        println(point)
+        Thread.sleep(3000)
+      }
+
   }
 
 
@@ -55,11 +59,11 @@ class Producer() {
   properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[UUIDSerializer])
   val producer: KafkaProducer[UUID, GenericRecord] = new KafkaProducer[UUID, GenericRecord](properties)
 
-  def send(point: SourcedPoint): Future[RecordMetadata] = producer.send(
+  def send(point: SourcedPoint): RecordMetadata = producer.send(
     new ProducerRecord[UUID, GenericRecord](
-      properties.getProperty("TOPIC"), point.sourceId, point.toGenericRecord
+      properties.getProperty("TOPIC_NAME"), point.sourceId, point.toGenericRecord
     )
-  )
+  ).get()
 }
 
 
