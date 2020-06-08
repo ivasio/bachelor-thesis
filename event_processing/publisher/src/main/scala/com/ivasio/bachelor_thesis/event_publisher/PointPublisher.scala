@@ -18,7 +18,7 @@ import scala.util.Random
 object PointPublisher {
 
   def main(args: Array[String]): Unit = {
-    val junction = new Junction(1, "МКАД - ш. Энтузиастов", 37.84270f, 55.77692f, 1000)
+    val junction = new Junction(3, "МКАД - Рязанский пр.", 37.83499f, 55.70789f, 1000)
     publishPoints(junction)
   }
 
