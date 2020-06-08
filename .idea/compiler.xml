@@ -13,7 +13,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="aggregator" target="8" />
+      <module name="aggregator" target="1.8" />
       <module name="event_processing" target="8" />
       <module name="publisher" target="8" />
       <module name="shared" target="8" />

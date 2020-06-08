@@ -18,5 +18,6 @@ RUN mvn package
 
 # Package image
 FROM flink:1.10.0-scala_2.12
-COPY --from=target /build/event_processing/aggregator/target/aggregator-*-with-dependencies.jar /
-ENTRYPOINT java -jar /aggregator-*-with-dependencies.jar
+COPY --from=target /build/event_processing/aggregator/target/aggregator-*.jar .
+COPY --from=target /build/event_processing/aggregator/entrypoint.sh .
+ENTRYPOINT ["./entrypoint.sh"]
