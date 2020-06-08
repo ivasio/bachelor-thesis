@@ -1,5 +1,6 @@
 package com.ivasio.bachelor_thesis.shared.records;
 
+import com.ivasio.bachelor_thesis.shared.models.Junction;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
@@ -50,6 +51,10 @@ public class JunctionUpdate extends AvroRecord<JunctionUpdate> {
     }
 
     public JunctionUpdate() {}
+
+    public JunctionUpdate(Junction junction) {
+        this(junction.getId(), junction.getLongitude(), junction.getLatitude(), junction.getRadius());
+    }
 
     public JunctionUpdate(long id, float longitude, float latitude, float radius) {
         this.id = id;

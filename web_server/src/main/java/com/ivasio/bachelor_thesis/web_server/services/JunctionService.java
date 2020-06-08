@@ -14,16 +14,23 @@ import java.util.Optional;
 @Transactional
 public class JunctionService {
 
+    private final JunctionUpdatesSender updatesSender = new JunctionUpdatesSender();
+
     @Autowired
     private JunctionRepository repo;
 
     public List<Junction> listAll() {
-        List<Junction> result = repo.findAll();
-        return result;
+        return repo.findAll();
     }
 
     public Optional<Junction> get(Long id) {
         return repo.findById(id);
     }
+
+    public void add(Junction junction) {
+        repo.saveAndFlush(junction);
+        updatesSender.send(junction);
+    }
+
 
 }
