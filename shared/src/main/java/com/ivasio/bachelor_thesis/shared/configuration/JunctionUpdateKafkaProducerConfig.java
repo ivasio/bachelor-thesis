@@ -10,7 +10,7 @@ public class JunctionUpdateKafkaProducerConfig extends KafkaProducerConfig{
     public Properties getProperties() {
         Properties properties = super.getProperties();
         properties.put("SCHEMA", new JunctionUpdate().getSchema());
-        properties.put("TOPIC_NAME", "source_kunctions");
+        properties.put("TOPIC_NAME", "source_junctions");
         return properties;
     }
 }

@@ -2,3 +2,5 @@
 event_processing/aggregator/Dockerfile
 event_processing/publisher/Dockerfile
 *docker-compose*
+Tracker
+.idea
