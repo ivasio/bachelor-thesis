@@ -16,15 +16,17 @@ object RouteProcessor {
 
   def main(args: Array[String]) {
     val junctions = setupJunctionsSourceStream
+      .keyBy(_ => 0)
+
     val points = setupPointsSourceStream
+      .assignAscendingTimestamps(_.timestamp.getEpochSecond)
+      .keyBy(_.sourceId)  // splitting the stream here
+      .keyBy(_ => 0)  // unifying all the keys so that connected streams work out
 
     points
-        .assignAscendingTimestamps(_.timestamp.getEpochSecond)
-        .keyBy(_.sourceId)
       .connect(junctions)
       .flatMap(new RouteFilterFunction)
-
-      .keyBy(_._2)
+        .keyBy(_._2)
       .window(EventTimeSessionWindows.withGap(Time.minutes(2)))
         .allowedLateness(Time.minutes(3))
         .aggregate(new SquashPointsProcessFunction)
