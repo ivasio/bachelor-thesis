@@ -8,7 +8,7 @@ import com.ivasio.bachelor_thesis.shared.models.Junction
 import com.ivasio.bachelor_thesis.shared.records.SourcedPoint
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord, RecordMetadata}
-import org.apache.kafka.common.serialization.UUIDSerializer
+import org.apache.kafka.common.serialization.StringSerializer
 
 import scala.collection.immutable.Stream
 import scala.math._
@@ -23,7 +23,7 @@ object PointPublisher {
   }
 
   def publishPoints(junction: Junction): Unit = {
-    val sourceId = UUID.randomUUID
+    val sourceId = UUID.randomUUID.toString
     val producer = new Producer
     generateCoordinates(junction)
       .map{case (x, y) => new SourcedPoint(sourceId, x, y, Instant.now())}
@@ -56,11 +56,11 @@ object PointPublisher {
 
 class Producer() {
   val properties: Properties = new SourcedPointKafkaProducerConfig().getProperties
-  properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[UUIDSerializer])
-  val producer: KafkaProducer[UUID, GenericRecord] = new KafkaProducer[UUID, GenericRecord](properties)
+  properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
+  val producer: KafkaProducer[String, GenericRecord] = new KafkaProducer[String, GenericRecord](properties)
 
   def send(point: SourcedPoint): RecordMetadata = producer.send(
-    new ProducerRecord[UUID, GenericRecord](
+    new ProducerRecord[String, GenericRecord](
       properties.getProperty("TOPIC_NAME"), point.sourceId, point.toGenericRecord
     )
   ).get()

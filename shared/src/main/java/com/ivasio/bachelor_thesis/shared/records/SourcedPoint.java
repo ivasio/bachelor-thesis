@@ -5,13 +5,13 @@ import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.util.Utf8;
 
 import java.time.Instant;
-import java.util.UUID;
 
 
 public class SourcedPoint extends AvroRecord<SourcedPoint> {
-    public UUID sourceId;
+    public String sourceId;
     public float longitude;
     public float latitude;
     public Instant timestamp;
@@ -39,14 +39,14 @@ public class SourcedPoint extends AvroRecord<SourcedPoint> {
         record.put("longitude", longitude);
         record.put("latitude", latitude);
         record.put("timestamp", timestamp.getEpochSecond());
-        record.put("sourceId", sourceId.toString());
+        record.put("sourceId", sourceId);
         return record;
     }
 
     @Override
     public SourcedPoint fromGenericRecord(GenericRecord genericRecord) {
         return new SourcedPoint(
-            UUID.fromString((String)genericRecord.get("sourceId")),
+            ((Utf8)genericRecord.get("sourceId")).toString(),
             (float)genericRecord.get("longitude"),
             (float)genericRecord.get("latitude"),
             Instant.ofEpochSecond((long)genericRecord.get("timestamp"))
@@ -55,7 +55,7 @@ public class SourcedPoint extends AvroRecord<SourcedPoint> {
 
     public SourcedPoint() {}
 
-    public SourcedPoint(UUID sourceId, float longitude, float latitude, Instant timestamp) {
+    public SourcedPoint(String sourceId, float longitude, float latitude, Instant timestamp) {
         this.sourceId = sourceId;
         this.longitude = longitude;
         this.latitude = latitude;

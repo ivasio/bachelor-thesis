@@ -19,4 +19,4 @@ RUN mvn package
 # Package image
 FROM openjdk:8-jre-alpine
 COPY --from=target /build/event_processing/publisher/target/publisher-*-with-dependencies.jar /
-ENTRYPOINT java -jar /publisher-*-with-dependencies.jar
+ENTRYPOINT sleep 10 && java -jar /publisher-*-with-dependencies.jar
