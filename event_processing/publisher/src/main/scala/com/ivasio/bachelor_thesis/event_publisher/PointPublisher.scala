@@ -37,7 +37,7 @@ object PointPublisher {
 
 
   def generateCoordinates(junction: Junction): Stream[(Float, Float)] = {
-    val radiusCoordinates = DistanceConverter.toCoordinates(junction.getRadius * 2)
+    val radiusCoordinates = DistanceConverter.toCoordinates(junction.getRadius)
     val loops = 3 + Random.nextInt(5)
 
     def ro(phi: Double): Double = radiusCoordinates * cos(loops * phi)

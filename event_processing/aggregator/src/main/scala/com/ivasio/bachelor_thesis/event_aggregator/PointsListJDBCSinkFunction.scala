@@ -10,6 +10,7 @@ import org.hibernate.cfg.Configuration
 class PointsListJDBCSinkFunction extends SinkFunction[(List[Point], Long)] {
 
   override def invoke(value: (List[Point], Long), context: SinkFunction.Context[_]): Unit = {
+    println(s"PointsListJDBCSinkFunction: inserting ${value._1.size} points for Junction id ${value._2}")
     val session = sessionFactory.openSession()
     val tx = session.beginTransaction()
 
@@ -28,7 +29,6 @@ class PointsListJDBCSinkFunction extends SinkFunction[(List[Point], Long)] {
 
   lazy val sessionFactory: SessionFactory = {
     val config = new Configuration()
-    config.configure()
     config.addProperties(new PostgresHibernateConfig().getProperties)
     config.buildSessionFactory()
   }

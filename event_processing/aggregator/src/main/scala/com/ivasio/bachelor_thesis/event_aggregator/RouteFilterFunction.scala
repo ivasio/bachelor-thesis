@@ -13,7 +13,10 @@ class RouteFilterFunction extends RichCoFlatMapFunction[SourcedPoint, JunctionUp
 
   override def flatMap1(point: SourcedPoint, out: Collector[(SourcedPoint, Long)]): Unit = {
     junctionsStore.values.forEach(junction => {
-      if (junction.containsPoint(point)) out.collect(point, junction.id)
+      if (junction.containsPoint(point)) {
+        println(s"RouteFilterFunction: New point for ${junction.id}")
+        out.collect(point, junction.id)
+      }
     })
   }
 
